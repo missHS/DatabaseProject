@@ -38,9 +38,9 @@ public class DAL {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-			String url = "jdbc:sqlserver://localhost:1433;database=assignment1";
-			String user = "admin1";
-			String password = "admin1";
+			String url = //Link to databaseServer;
+			String user = //User login namne
+			String password = //User login password
 
 			con = DriverManager.getConnection(url, user, password);
 
