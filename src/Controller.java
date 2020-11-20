@@ -76,61 +76,15 @@ public class Controller {
 		}
 
 	}
-
-	public void resultSetIteratorStudent(ResultSet rs, int arrayLenght) {
+	
+	public void resultSetIterator(ResultSet rs, int arrayLenght, DefaultTableModel model) {
 		try {
 			while (rs.next()) {
 				Object[] objects = new Object[arrayLenght];
 				for (int i = 0; i < objects.length; i++) {
 					objects[i] = rs.getObject(i + 1);
 				}
-				modelStudent.addRow(objects);
-
-			}
-		} catch (SQLException sqlException) {
-			sqlExceptions(sqlException);
-
-		}
-
-		finally {
-			closeResultSet(rs);
-		}
-
-	}
-
-	public void resultSetIteratorRegister(ResultSet rs, int arrayLenght) {
-		try {
-			while (rs.next()) {
-				Object[] objects = new Object[arrayLenght];
-				for (int i = 0; i < objects.length; i++) {
-					objects[i] = rs.getObject(i + 1);
-				}
-				modelRegister.addRow(objects);
-
-			}
-		} catch (SQLException sqlException) {
-			sqlExceptions(sqlException);
-
-		}
-
-		finally {
-			try {
-				rs.close();
-			} catch (SQLException sqlException) {
-				sqlExceptions(sqlException);
-			}
-		}
-
-	}
-
-	public void resultSetIteratorRegistry(ResultSet rs, int arrayLength) {
-		try {
-			while (rs.next()) {
-				Object[] objects = new Object[arrayLength];
-				for (int i = 0; i < objects.length; i++) {
-					objects[i] = rs.getObject(i + 1);
-				}
-				modelHasStudied.addRow(objects);
+				model.addRow(objects);
 
 			}
 		} catch (SQLException sqlException) {
@@ -141,12 +95,11 @@ public class Controller {
 
 	}
 
-	public DefaultTableModel resetTables(DefaultTableModel model, Object[] array) {
+
+	public void resetTables(DefaultTableModel model, Object[] array) {
 		model.setRowCount(0);
 		model.setColumnCount(0);
-		model.setColumnIdentifiers(array);
-		return model;
-
+		model.setColumnIdentifiers(array);		
 	}
 
 	public void fillTables() {
@@ -160,7 +113,7 @@ public class Controller {
 
 		try {
 			resultSet = dal.findAllCourses();
-			resultSetIteratorCourse(resultSet, columnNamesCourses.length);
+			resultSetIterator(resultSet, columnNamesCourses.length,modelCourse);
 
 		} catch (SQLException sqlException) {
 			sqlExceptions(sqlException);
@@ -175,7 +128,7 @@ public class Controller {
 
 		try {
 			resultSet = dal.findAllStudents();
-			resultSetIteratorStudent(resultSet, columnNamesStudents.length);
+			resultSetIterator(resultSet, columnNamesStudents.length,modelStudent);
 
 		} catch (SQLException sqlException) {
 			sqlExceptions(sqlException);
@@ -189,7 +142,7 @@ public class Controller {
 
 		try {
 			resultSet = dal.findAllStudentAndCoursesFromStudies();
-			resultSetIteratorRegister(resultSet, columnNamesRegister.length);
+			resultSetIterator(resultSet, columnNamesRegister.length,modelRegister);
 
 		} catch (SQLException sqlException) {
 			sqlExceptions(sqlException);
@@ -204,7 +157,7 @@ public class Controller {
 		// Loads the data from the DAL
 		try {
 			resultSet = dal.findAllStudentAndCoursesFromHasStudied();
-			resultSetIteratorRegistry(resultSet, columnNamesHasStudied.length);
+			resultSetIterator(resultSet, columnNamesHasStudied.length,modelHasStudied);
 
 		} catch (SQLException sqlException) {
 			sqlExceptions(sqlException);
@@ -222,7 +175,7 @@ public class Controller {
 
 			try {
 				resultSet = dal.findStudent(ssnSearch);
-				resultSetIteratorStudent(resultSet, columnNamesStudents.length);
+				resultSetIterator(resultSet, columnNamesStudents.length,modelStudent);
 
 			} catch (SQLException sqlException) {
 				sqlExceptions(sqlException);
@@ -243,7 +196,7 @@ public class Controller {
 
 			try {
 				resultSet = dal.findCourse(courseCodeSearch);
-				resultSetIteratorCourse(resultSet, columnNamesCourses.length);
+				resultSetIterator(resultSet, columnNamesCourses.length,modelCourse);
 
 			} catch (SQLException sqlException) {
 				sqlExceptions(sqlException);
@@ -385,7 +338,7 @@ public class Controller {
 
 			try {
 				resultSet = dal.findCourseStudentHasStudied(courseCodeFilter, ssnFilter);
-				resultSetIteratorRegistry(resultSet, columnNamesHasStudied.length);
+				resultSetIterator(resultSet, columnNamesHasStudied.length,modelHasStudied);
 
 			} catch (SQLException sqlException) {
 				sqlExceptions(sqlException);
@@ -404,7 +357,7 @@ public class Controller {
 
 			try {
 				resultSet = dal.findCourseHasStudied(ssnFilter);
-				resultSetIteratorRegistry(resultSet, columnNamesHasStudied.length);
+				resultSetIterator(resultSet, columnNamesHasStudied.length,modelHasStudied);
 
 			} catch (SQLException sqlException) {
 				sqlExceptions(sqlException);
@@ -423,7 +376,7 @@ public class Controller {
 
 			try {
 				resultSet = dal.findStudentHasStudied(courseCodeFilter);
-				resultSetIteratorRegistry(resultSet, columnNamesHasStudied.length);
+				resultSetIterator(resultSet, columnNamesHasStudied.length,modelHasStudied);
 			} catch (SQLException sqlException) {
 				sqlExceptions(sqlException);
 			} finally {
