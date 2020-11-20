@@ -1,5 +1,4 @@
 
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -34,7 +33,7 @@ public class Controller {
 	View view = new View();
 	DAL dal = new DAL();
 
-	public Controller(View view, DAL dal) { 
+	public Controller(View view, DAL dal) {
 		this.dal = dal;
 		this.view = view;
 		fillTables();
@@ -142,31 +141,36 @@ public class Controller {
 
 	}
 
+	public DefaultTableModel resetTables(DefaultTableModel model, Object[] array) {
+		model.setRowCount(0);
+		model.setColumnCount(0);
+		model.setColumnIdentifiers(array);
+		return model;
+
+	}
+
 	public void fillTables() {
 //FILL COURSE TABLE
-		modelCourse.setRowCount(0);
-		modelCourse.setColumnCount(0);
+
 		Object[] columnNamesCourses = { "Code", "Name", "Credits" };
-		modelCourse.setColumnIdentifiers(columnNamesCourses);
+		resetTables(modelCourse, columnNamesCourses);
 		view.getTableCourse().setModel(modelCourse);
 
 		// Loads the data from the DAL
 
 		try {
 			resultSet = dal.findAllCourses();
-			resultSetIteratorCourse(resultSet, columnNamesCourses.length); 
-																			
+			resultSetIteratorCourse(resultSet, columnNamesCourses.length);
 
 		} catch (SQLException sqlException) {
 			sqlExceptions(sqlException);
-		} finally {
-			closeResultSet(resultSet);
-		}
+		} /*
+			 * finally { closeResultSet(resultSet); }
+			 */
 //FILL STUDENT TABLE
-		modelStudent.setRowCount(0);
-		modelStudent.setColumnCount(0);
+
 		Object[] columnNamesStudents = { "SSN", "Name", "PhoneNumber", "Address" };
-		modelStudent.setColumnIdentifiers(columnNamesStudents);
+		resetTables(modelStudent, columnNamesStudents);
 		view.getTableStudent().setModel(modelStudent);
 
 		try {
@@ -179,10 +183,8 @@ public class Controller {
 			closeResultSet(resultSet);
 		}
 // FILL REGISTER TABLE
-		modelRegister.setRowCount(0);
-		modelRegister.setColumnCount(0);
 		Object[] columnNamesRegister = { "SSN", "Name", "CourseCode" };
-		modelRegister.setColumnIdentifiers(columnNamesRegister);
+		resetTables(modelRegister, columnNamesRegister);
 		view.getTableRegister().setModel(modelRegister);
 
 		try {
@@ -195,10 +197,9 @@ public class Controller {
 			closeResultSet(resultSet);
 		}
 //FILL HASSTUDIED TABLE
-		modelHasStudied.setRowCount(0);
-		modelHasStudied.setColumnCount(0);
+
 		Object[] columnNamesHasStudied = { "Ssn", "Name", "CourseCode", "Grade" };
-		modelHasStudied.setColumnIdentifiers(columnNamesHasStudied);
+		resetTables(modelHasStudied, columnNamesHasStudied);
 		view.getTableRegistry().setModel(modelHasStudied);
 		// Loads the data from the DAL
 		try {
@@ -215,10 +216,8 @@ public class Controller {
 	public void filterStudentTable() {
 
 		if (ssnSearch != null) {
-			modelStudent.setRowCount(0);
-			modelStudent.setColumnCount(0);
-			Object[] columnNamesStudents = { "SSN", "Name", "PhoneNumber", "Address" }; 
-			modelStudent.setColumnIdentifiers(columnNamesStudents);
+			Object[] columnNamesStudents = { "SSN", "Name", "PhoneNumber", "Address" };
+			resetTables(modelStudent, columnNamesStudents);
 			view.getTableStudent().setModel(modelStudent);
 
 			try {
@@ -237,10 +236,9 @@ public class Controller {
 	public void filterCourseTable() {
 
 		if (courseCodeSearch != null) {
-			modelCourse.setRowCount(0);
-			modelCourse.setColumnCount(0);
+
 			Object[] columnNamesCourses = { "Code", "Name", "Credits" };
-			modelCourse.setColumnIdentifiers(columnNamesCourses);
+			resetTables(modelCourse, columnNamesCourses);
 			view.getTableCourse().setModel(modelCourse);
 
 			try {
@@ -380,11 +378,10 @@ public class Controller {
 	public void filterRegistryTableStudentAndCourse() {
 
 		if (ssnFilter != null && courseCodeFilter != null) {
-			modelHasStudied.setRowCount(0);
-			modelHasStudied.setColumnCount(0);
+
 			Object[] columnNamesHasStudied = { "Ssn", "Name", "CourseCode", "Grade" };
-			modelHasStudied.setColumnIdentifiers(columnNamesHasStudied);
-			view.getTableRegistry().setModel(modelHasStudied); 
+			resetTables(modelHasStudied, columnNamesHasStudied);
+			view.getTableRegistry().setModel(modelHasStudied);
 
 			try {
 				resultSet = dal.findCourseStudentHasStudied(courseCodeFilter, ssnFilter);
@@ -401,11 +398,9 @@ public class Controller {
 	public void filterRegistryTableStudent() {
 
 		if (ssnFilter != null) {
-			modelHasStudied.setRowCount(0);
-			modelHasStudied.setColumnCount(0);
-			Object[] columnNamesHasStudied = { "Ssn", "Name", "CourseCode", "Grade" }; 
-			modelHasStudied.setColumnIdentifiers(columnNamesHasStudied);
-			view.getTableRegistry().setModel(modelHasStudied); 
+			Object[] columnNamesHasStudied = { "Ssn", "Name", "CourseCode", "Grade" };
+			resetTables(modelHasStudied, columnNamesHasStudied);
+			view.getTableRegistry().setModel(modelHasStudied);
 
 			try {
 				resultSet = dal.findCourseHasStudied(ssnFilter);
@@ -422,11 +417,9 @@ public class Controller {
 	public void filterRegistryTableCourse() {
 
 		if (courseCodeFilter != null) {
-			modelHasStudied.setRowCount(0);
-			modelHasStudied.setColumnCount(0);
-			Object[] columnNamesHasStudied = { "Ssn", "Name", "CourseCode", "Grade" }; 
-			modelHasStudied.setColumnIdentifiers(columnNamesHasStudied);
-			view.getTableRegistry().setModel(modelHasStudied); 
+			Object[] columnNamesHasStudied = { "Ssn", "Name", "CourseCode", "Grade" };
+			resetTables(modelHasStudied, columnNamesHasStudied);
+			view.getTableRegistry().setModel(modelHasStudied);
 
 			try {
 				resultSet = dal.findStudentHasStudied(courseCodeFilter);
@@ -523,7 +516,7 @@ public class Controller {
 
 				if (selectedSSN != null) { // from table student
 
-					if (view.getTableStudent().getModel().getRowCount() != 0) { 
+					if (view.getTableStudent().getModel().getRowCount() != 0) {
 
 						try {
 							dal.deleteStudent(selectedSSN);
@@ -549,8 +542,7 @@ public class Controller {
 			public void mouseClicked(MouseEvent e) {
 				JTable targetPressed = (JTable) e.getSource();
 				int selectedRow = targetPressed.getSelectedRow();
-				selectedSSN = view.getTableStudent().getModel().getValueAt(selectedRow, 0).toString(); 
-																										
+				selectedSSN = view.getTableStudent().getModel().getValueAt(selectedRow, 0).toString();
 
 			}
 		});
